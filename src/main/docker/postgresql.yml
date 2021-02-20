@@ -1,0 +1,12 @@
+version: '2'
+services:
+  cloud-postgresql:
+    image: postgres:12.3
+    # volumes:
+    #     - ~/volumes/jhipster/cloud/postgresql/:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=cloud
+      - POSTGRES_PASSWORD=
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - 5432:5432

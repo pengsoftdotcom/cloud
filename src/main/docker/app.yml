@@ -1,0 +1,42 @@
+version: '2'
+services:
+  cloud-app:
+    image: cloud
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m -Xms256m
+      - SPRING_PROFILES_ACTIVE=prod,swagger
+      - MANAGEMENT_METRICS_EXPORT_PROMETHEUS_ENABLED=true
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://cloud-postgresql:5432/cloud
+      - JHIPSTER_CACHE_REDIS_SERVER=redis://cloud-redis:6379
+      - JHIPSTER_CACHE_REDIS_CLUSTER=false
+      # - JHIPSTER_CACHE_REDIS_SERVER=redis://cloud-redis:6379
+      # - JHIPSTER_CACHE_REDIS_CLUSTER=true
+      - JHIPSTER_SLEEP=30 # gives time for other services to boot before the application
+      - SPRING_DATA_JEST_URI=http://cloud-elasticsearch:9200
+      - SPRING_ELASTICSEARCH_REST_URIS=http://cloud-elasticsearch:9200
+      - KAFKA_BOOTSTRAPSERVERS=kafka:9092
+    ports:
+      - 80:80
+  cloud-postgresql:
+    extends:
+      file: postgresql.yml
+      service: cloud-postgresql
+  cloud-redis:
+    extends:
+      file: redis.yml
+      service: cloud-redis
+  cloud-elasticsearch:
+    extends:
+      file: elasticsearch.yml
+      service: cloud-elasticsearch
+  kafka:
+    extends:
+      file: kafka.yml
+      service: kafka
+    environment:
+      - KAFKA_ADVERTISED_HOST_NAME=kafka
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+  zookeeper:
+    extends:
+      file: kafka.yml
+      service: zookeeper
